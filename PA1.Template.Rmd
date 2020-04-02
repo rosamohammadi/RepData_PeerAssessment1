@@ -2,9 +2,7 @@
 title: "PA1_template.Rmd"
 author: "Zahra Mohammadi"
 date: "3/30/2020"
-output:
-  html_document:
-    df_print: paged
+output: html_document
 ---
 ## Reproducible Research: Peer Assessment 1
 
@@ -16,7 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 #### Removing hashtags in final result
 
-```{r include=FALSE}
+```{r include=TRUE}
 knitr::opts_chunk$set(comment = NA)
 ```
 
