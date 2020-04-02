@@ -2,9 +2,9 @@
 title: "PA1_template.Rmd"
 author: "Zahra Mohammadi"
 date: "3/30/2020"
-output: 
-  html_document: 
-    keep_md: yes
+output:
+  html_document:
+    df_print: paged
 ---
 ## Reproducible Research: Peer Assessment 1
 
