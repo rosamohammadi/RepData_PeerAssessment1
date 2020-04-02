@@ -1,45 +1,44 @@
----
-title: "PA1_template.Rmd"
-author: "Zahra Mohammadi"
-date: "3/30/2020"
-output: 
-  html_document: 
-    keep_md: yes
----
+PA1\_template.Rmd
+================
+Zahra Mohammadi
+3/30/2020
+
 ## Reproducible Research: Peer Assessment 1
 
 #### Set echo = TRUE for all chuncks to show R codes in markdown
 
-
-```r
+``` r
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
 #### Removing hashtags in final result
 
-
+``` r
+knitr::opts_chunk$set(comment = NA)
+```
 
 #### Setting working directory
 
-```r
+``` r
 setwd('C:\\Users\\moham\\Documents\\R')
 ```
 
 #### Loading and Preprocessing the data
 
-download.file("https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip", "activity.zip")
+download.file(“<https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip>”,
+“activity.zip”)
 
 #### Unziping the data
 
-
-```r
+``` r
 if (!file.exists('activity.csv')) {
   unzip(zipfile = "activity.zip")
 }
 ```
+
 #### Reading the data
 
-```r
+``` r
 activityData <- read.csv(file="activity.csv", header=TRUE)
 ```
 
@@ -47,40 +46,35 @@ activityData <- read.csv(file="activity.csv", header=TRUE)
 
 ##### Calculate the total steps taken per day
 
-
-```r
+``` r
 totalSteps <- aggregate(steps ~ date, activityData, sum, na.rm = TRUE) 
 ```
 
 #### Make a histogram of the total number of steps taken per day
 
-
-```r
+``` r
 hist(totalSteps$steps,
      main = "Total Steps per Day",
      xlab = "Number of Steps", breaks = 15)
 ```
 
-![](PA1.Template_files/figure-html/unnamed-chunk-7-1.png)<!-- -->
+![](PA1.Template_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 
 #### Calculate and report the mean and median of total steps taken per day
 
-
-```r
+``` r
 meanSteps <- mean(totalSteps$steps, na.rm = TRUE)
 medSteps <- median(totalSteps$steps, na.rm = TRUE)
 paste("The mean total steps in a day is", meanSteps, "and the median is", medSteps, ".")
 ```
 
-```
-[1] "The mean total steps in a day is 10766.1886792453 and the median is 10765 ."
-```
+    [1] "The mean total steps in a day is 10766.1886792453 and the median is 10765 ."
 
 #### What is the average daily activity pattern?
+
 #### Make a time-series plot of the 5-minute interval and the average number of steps taken, averaged acoss all days.
 
-
-```r
+``` r
 library(ggplot2)
 meanStepsByInt <- aggregate(steps ~ interval, activityData, mean)
 ggplot(data = meanStepsByInt, aes(x = interval, y = steps)) +
@@ -91,52 +85,51 @@ ggplot(data = meanStepsByInt, aes(x = interval, y = steps)) +
   theme(plot.title = element_text(hjust = 0.5))
 ```
 
-![](PA1.Template_files/figure-html/unnamed-chunk-9-1.png)<!-- -->
+![](PA1.Template_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
 
 #### Which 5-minute interval across all days contain the maximum number of steps
 
-```r
+``` r
 maxInt <- meanStepsByInt[which.max(meanStepsByInt$steps),]
 paste("The interval with the largest average number of steps is interval", maxInt$interval, ".")
 ```
 
-```
-[1] "The interval with the largest average number of steps is interval 835 ."
-```
-#### Imputing missing values 
+    [1] "The interval with the largest average number of steps is interval 835 ."
+
+#### Imputing missing values
+
 #### Calculate and report the total number of missing values in the dataset
 
-```r
+``` r
 missingVals <- is.na(activityData$steps)
 sum(missingVals)
 ```
 
-```
-[1] 2304
-```
+    [1] 2304
 
 #### Devise a strategy for filling in all of the missing values
+
 #### Create a new dataset that is equal to the original dataset but with the missing data filled in.
 
-
-```r
+``` r
 imp_activityData <- 
 transform(activityData, steps = ifelse(is.na(activityData$steps),meanStepsByInt$steps[match(activityData$interval, meanStepsByInt$interval)],activityData$steps))
 ```
 
 #### Make a histogram of the total number of steps taken each day and
+
 #### and report the mean and median.
 
-```r
+``` r
 impStepsByInt <- aggregate(steps ~ date, imp_activityData, FUN=sum)
 hist(impStepsByInt$steps,
      main = "Imputed Number of Steps Per Day",
      xlab = "Number of Steps")
 ```
 
-![](PA1.Template_files/figure-html/unnamed-chunk-13-1.png)<!-- -->
+![](PA1.Template_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
 
-```r
+``` r
 impMeanSteps <- mean(impStepsByInt$steps, na.rm = TRUE)
 impMedSteps <- median(impStepsByInt$steps, na.rm = TRUE)
 diffMean = impMeanSteps - meanSteps
@@ -145,14 +138,13 @@ diffTotal = sum(impStepsByInt$steps) - sum(totalSteps$steps)
 paste("The new mean total steps in a day is", impMeanSteps, "and the median is", impMedSteps, ", instead of", meanSteps, "and", medSteps, "respectively.")
 ```
 
-```
-[1] "The new mean total steps in a day is 10766.1886792453 and the median is 10766.1886792453 , instead of 10766.1886792453 and 10765 respectively."
-```
+    [1] "The new mean total steps in a day is 10766.1886792453 and the median is 10766.1886792453 , instead of 10766.1886792453 and 10765 respectively."
 
 #### Are there differences in activity patterns between weekdays and weekends?
-#### Create a new factor variable in the dataset with two levels - "weekend" and "weekday"
 
-```r
+#### Create a new factor variable in the dataset with two levels - “weekend” and “weekday”
+
+``` r
 DayType <- function(date) {
   day <- weekdays(date)
   if (day %in% c('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'))
@@ -167,9 +159,10 @@ imp_activityData$day <- sapply(imp_activityData$date, FUN = DayType)
 ```
 
 #### Make a panel plot containnig a time-series plot of the 5-minute interval
+
 #### and the average number of steps taken across all weekdays or weekends
 
-```r
+``` r
 meanStepsByDay <- aggregate(steps ~ interval + day, imp_activityData, mean)
 ggplot(data = meanStepsByDay, aes(x = interval, y = steps)) + 
   geom_line() +
@@ -180,13 +173,4 @@ ggplot(data = meanStepsByDay, aes(x = interval, y = steps)) +
   theme(plot.title = element_text(hjust = 0.5))
 ```
 
-![](PA1.Template_files/figure-html/unnamed-chunk-15-1.png)<!-- -->
-
-
-
-
-
-
-
-
-
+![](PA1.Template_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->

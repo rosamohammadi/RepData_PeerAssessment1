@@ -2,7 +2,7 @@
 title: "PA1_template.Rmd"
 author: "Zahra Mohammadi"
 date: "3/30/2020"
-output: html_document
+output: github_document
 ---
 ## Reproducible Research: Peer Assessment 1
 
@@ -61,7 +61,6 @@ hist(totalSteps$steps,
 meanSteps <- mean(totalSteps$steps, na.rm = TRUE)
 medSteps <- median(totalSteps$steps, na.rm = TRUE)
 paste("The mean total steps in a day is", meanSteps, "and the median is", medSteps, ".")
-
 ```
 
 #### What is the average daily activity pattern?
@@ -140,14 +139,4 @@ ggplot(data = meanStepsByDay, aes(x = interval, y = steps)) +
   xlab("5-minute Interval") +
   ylab("Average Number of Steps") +
   theme(plot.title = element_text(hjust = 0.5))
-
 ```
-
-
-
-
-
-
-
-
-
